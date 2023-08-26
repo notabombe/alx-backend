@@ -23,7 +23,7 @@ class Server:
         if self.__dataset is None:
             with open(self.DATA_FILE) as f:
                 reader = csv.reader(f)
-                dataset = [row for row in reader]
+                dataset = list(reader)
             self.__dataset = dataset[1:]
 
         return self.__dataset
@@ -54,10 +54,9 @@ class Server:
         dataset = self.indexed_dataset()
         data_length = len(dataset)
         assert 0 <= index < data_length
-        response = {}
         data = []
-        response['index'] = index
-        for i in range(page_size):
+        response = {'index': index}
+        for _ in range(page_size):
             while True:
                 curr = dataset.get(index)
                 index += 1
@@ -67,8 +66,5 @@ class Server:
 
         response['data'] = data
         response['page_size'] = len(data)
-        if dataset.get(index):
-            response['next_index'] = index
-        else:
-            response['next_index'] = None
+        response['next_index'] = index if dataset.get(index) else None
         return response

@@ -21,17 +21,16 @@ class MRUCache(BaseCaching):
         Cache a key-value pair
         """
         if key is None or item is None:
-            pass
-        else:
-            length = len(self.cache_data)
-            if length >= BaseCaching.MAX_ITEMS and key not in self.cache_data:
-                print("DISCARD: {}".format(self.usage[-1]))
-                del self.cache_data[self.usage[-1]]
-                del self.usage[-1]
-            if key in self.usage:
-                del self.usage[self.usage.index(key)]
-            self.usage.append(key)
-            self.cache_data[key] = item
+            return
+        length = len(self.cache_data)
+        if length >= BaseCaching.MAX_ITEMS and key not in self.cache_data:
+            print(f"DISCARD: {self.usage[-1]}")
+            del self.cache_data[self.usage[-1]]
+            del self.usage[-1]
+        if key in self.usage:
+            del self.usage[self.usage.index(key)]
+        self.usage.append(key)
+        self.cache_data[key] = item
 
     def get(self, key):
         """

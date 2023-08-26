@@ -24,7 +24,7 @@ class Server:
         if self.__dataset is None:
             with open(self.DATA_FILE) as f:
                 reader = csv.reader(f)
-                dataset = [row for row in reader]
+                dataset = list(reader)
             self.__dataset = dataset[1:]
 
         return self.__dataset
@@ -68,12 +68,11 @@ class Server:
         """
         total_pages = len(self.dataset()) // page_size + 1
         data = self.get_page(page, page_size)
-        info = {
+        return {
             "page": page,
-            "page_size": page_size if page_size <= len(data) else len(data),
+            "page_size": min(page_size, len(data)),
             "total_pages": total_pages,
             "data": data,
             "prev_page": page - 1 if page > 1 else None,
-            "next_page": page + 1 if page + 1 <= total_pages else None
+            "next_page": page + 1 if page + 1 <= total_pages else None,
         }
-        return info

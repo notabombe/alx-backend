@@ -19,7 +19,7 @@ def index_range(page: int, page_size: int) -> Tuple[int, int]:
         tuple(start_index, end_index)
     """
     start, end = 0, 0
-    for i in range(page):
+    for _ in range(page):
         start = end
         end += page_size
 
@@ -40,7 +40,7 @@ class Server:
         if self.__dataset is None:
             with open(self.DATA_FILE) as f:
                 reader = csv.reader(f)
-                dataset = [row for row in reader]
+                dataset = list(reader)
             self.__dataset = dataset[1:]
 
         return self.__dataset

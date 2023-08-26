@@ -48,9 +48,7 @@ def get_user() -> Union[Dict, None]:
     or if 'login_as' URL parameter was not found
     """
     id = request.args.get('login_as', None)
-    if id and int(id) in users.keys():
-        return users.get(int(id))
-    return None
+    return users.get(int(id)) if id and int(id) in users.keys() else None
 
 
 @app.before_request
@@ -90,8 +88,7 @@ def get_timezone():
     """
     Select and return appropriate timezone
     """
-    tzone = request.args.get('timezone', None)
-    if tzone:
+    if tzone := request.args.get('timezone', None):
         try:
             return timezone(tzone).zone
         except pytz.exceptions.UnknownTimeZoneError:
@@ -102,8 +99,7 @@ def get_timezone():
             return timezone(tzone).zone
         except pytz.exceptions.UnknownTimeZoneError:
             pass
-    dflt = app.config['BABEL_DEFAULT_TIMEZONE']
-    return dflt
+    return app.config['BABEL_DEFAULT_TIMEZONE']
 
 
 @app.route('/', strict_slashes=False)
